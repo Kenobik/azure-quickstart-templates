@@ -52,21 +52,22 @@
         Installs 1.7.3 version of elasticsearch with cluster name evilescluster and 4 allowed subnet addresses from 3 to 6. Sets up the VM as data node.
 #>
 Param(
-    [Parameter(Mandatory=$true)][string]$elasticSearchVersion,
-    [string]$jdkDownloadLocation,
+	[Parameter(Mandatory=$true)][string]$elasticSearchVersion,
+	[string]$jdkDownloadLocation,
 	[string]$elasticSearchBaseFolder,
-    [string]$discoveryEndpoints,
+	[string]$discoveryEndpoints,
 	[string]$elasticClusterName,
-    [string]$storageKey,
-    [string]$marvelEndpoints,
+	[string]$storageKey,
+	[string]$marvelEndpoints,
 	[string]$po,
 	[string]$r,
-    [switch]$marvelOnlyNode,
+	[switch]$marvelOnlyNode,
 	[switch]$masterOnlyNode,
 	[switch]$clientOnlyNode,
 	[switch]$dataOnlyNode,
 	[switch]$m,
-	[switch]$jmeterConfig
+	[switch]$jmeterConfig,
+	[switch]$storeDataOnTemporaryDisk	
 )
 
 # To set the env vars permanently, need to use registry location
@@ -115,20 +116,29 @@ function Initialize-Disks{
 
 function Create-DataFolders([int]$numDrives, [string]$folder)
 {
-    $letters = 70..90 | ForEach-Object { ([char]$_) }
-
-    $pathSet = @(0) * $numDrives
-    for($i=0;$i -lt $numDrives;$i++)
-    {
-        $pathSet[$i] = $letters[$i] + ':\' + $folder
-        New-Item -Path $pathSet[$i]  -ItemType Directory | Out-Null
-    }
-
-    $retVal = $pathSet -join ','
-
-    lmsg "Created data folders: $retVal" 
-    
-    return $retVal
+	$retVal = ''
+	if(-Not $storeDataOnTemporaryDisk)
+	{
+		$letters = 70..90 | ForEach-Object { ([char]$_) }
+	
+		$pathSet = @(0) * $numDrives
+		for($i=0;$i -lt $numDrives;$i++)
+		{
+			$pathSet[$i] = $letters[$i] + ':\' + $folder
+			New-Item -Path $pathSet[$i]  -ItemType Directory | Out-Null
+		}
+	    
+		lmsg "Created data folders: $retVal" 	
+		$retVal = $pathSet -join ','
+	}
+	else
+	{
+		$retVal = 'D' + ':\' + $folder
+		New-Item -Path $retVal  -ItemType Directory | Out-Null
+	
+		lmsg "Created data folders: $retVal"
+	}
+	return $retVal
 }
 
 function Download-Jdk
@@ -490,14 +500,20 @@ function Install-WorkFlow
 {
 	# Start script
     Startup-Output
-	
-    # Discover raw data disks and format them
-    $dc = Initialize-Disks
-    
-    # Create data folders on raw disks
-    if($dc -gt 0)
+    if(-Not $storeDataOnTemporaryDisk)
+    {	
+	    # Discover raw data disks and format them
+	    $dc = Initialize-Disks
+	    
+	    # Create data folders on raw disks
+	    if($dc -gt 0)
+	    {
+	        $folderPathSetting = (Create-DataFolders $dc 'elasticsearch\data')
+	    }
+    }
+    else
     {
-        $folderPathSetting = (Create-DataFolders $dc 'elasticsearch\data')
+    	$folderPathSetting = (Create-DataFolders 0 'elasticsearch\data')
     }
 
 	# Set first drive
