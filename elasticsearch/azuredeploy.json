@@ -408,6 +408,16 @@
         "no":""
       } 
     },
+   "useTemporaryDataStorageParam":{
+      "ubuntu": {
+        "yes": "",
+        "no": ""
+      },
+      "windows": {
+        "yes":" -storeDataOnTemporaryDisk ",
+        "no":""
+      } 
+    },
     "marvelExportParam" : {
       "ubuntu" : {
         "yes" : "[concat(' -e ', variables('marvelNodesIpPrefix'), '-3')]",
@@ -432,6 +442,7 @@
     "marvelParamValue": "[variables('marvelParam')[parameters('OS')][parameters('marvel')]]",
     "jmeterParamValue": "[variables('jmeterParam')[parameters('jmeterAgent')]]",
     "afsParamValue": "[variables('afsParam')[parameters('OS')][parameters('afs')]]",
+    "useTemporaryDataStorageParamValue": "[variables('useTemporaryDataStorageParam')[parameters('OS')][parameters('useTemporaryDataStorage')]]",
     "kibanaTemplates": {
       "yes": "kibana-resources.json",
       "no": "empty-resources.json"
@@ -566,7 +577,7 @@
           "typeHandlerVersion": "1.4",
           "settings": {
             "fileUris": "[variables('windowsScripts')]",
-            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').clusterName,' -discoveryEndpoints ', variables('esSettings').discoveryHosts, variables('cloudAzureParamValue'), variables('marvelParamValue'), variables('marvelExportParamValue'), ' -dataOnlyNode -storageKey ')]"
+            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').clusterName,' -discoveryEndpoints ', variables('esSettings').discoveryHosts, variables('cloudAzureParamValue'), variables('marvelParamValue'), variables('marvelExportParamValue'), ' -dataOnlyNode -storageKey ', variables('useTemporaryDataStorageParamValue'))]"
           }
         }
       }
