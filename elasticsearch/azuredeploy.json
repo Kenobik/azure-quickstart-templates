@@ -167,7 +167,18 @@
         "description": "Number of Elasticsearch data nodes"
       }
     },
-    "esClusterName": {
+    "useTemporaryDataStorage": {
+      "type": "string",
+      "defaultValue": "yes",
+      "allowedValues": [
+        "yes",
+        "no"
+      ],
+      "metadata": {
+        "description": "Use D drive for data, which is SSD drive providing better performance, but could cause data loss."
+      }
+    },
+   "esClusterName": {
       "type": "string",
       "defaultValue": "elasticsearch",
       "metadata": {
@@ -578,7 +589,10 @@
         "storageAccountType":"Standard_LRS"
       },
       "Standard_D4_v2": {
-        "dataDisks":16,
+        "dataDisks": {
+            "useTemporaryDataStorage-yes": 0,
+            "useTemporaryDataStorage-no": 16
+          },
         "nodesPerStorageAccount":2,
         "storageAccountType":"Standard_LRS"
       },
