@@ -723,7 +723,7 @@
     },
     "dataTemplateUrl": {
         "afs-yes": "[concat(variables('templateBaseUrl'), 'data-nodes-0disk-resources.json')]",
-        "afs-no": "[concat(variables('templateBaseUrl'), 'data-nodes-', string(variables('dataSkuSettings')[parameters('vmSizeDataNodes')].dataDisks), 'disk-resources.json')]"
+        "afs-no": "[concat(variables('templateBaseUrl'), 'data-nodes-0disk-resources.json')]"
     }
   },
   "resources": [
