@@ -600,10 +600,7 @@
         "storageAccountType":"Standard_LRS"
       },
       "Standard_D4_v2": {
-        "dataDisks": {
-            "useTemporaryDataStorage-yes": 0,
-            "useTemporaryDataStorage-no": 16
-          },
+        "dataDisks": 0,
         "nodesPerStorageAccount":2,
         "storageAccountType":"Standard_LRS"
       },
