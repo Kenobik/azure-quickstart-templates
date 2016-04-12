@@ -625,7 +625,7 @@ function Install-WorkFlow
         }
         else
         {
-            $textToAppend = $textToAppend + "`nmarvel.agent.exporter.hosts: [$marvelIPAddresses]"
+            $textToAppend = $textToAppend + "`nmarvel.agent.exporter.es.hosts: [$marvelIPAddresses]"
         }
     }
         
