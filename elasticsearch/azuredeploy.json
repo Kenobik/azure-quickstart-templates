@@ -499,7 +499,7 @@
           "typeHandlerVersion": "1.4",
           "settings": {
             "fileUris": "[variables('windowsScripts')]",
-            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').marvelClusterName,' -discoveryEndpoints ', variables('esSettings').marvelHosts, ' -marvelOnlyNode -storageKey ')]"
+            "commandToExecute": "[concat('powershell.exe -File elasticsearch-windows-install.ps1 -elasticSearchVersion ', variables('esSettings').version,' -elasticClusterName ', variables('esSettings').marvelClusterName,' -discoveryEndpoints ', variables('esSettings').marvelHosts, ' -m -marvelOnlyNode -storageKey ')]"
           }
         },
         "master": {
