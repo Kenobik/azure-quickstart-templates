@@ -76,7 +76,13 @@
       "metadata": {
         "description": "loadBalancerBackendAddressPools config object"
       }
-    }
+    },
+    "vmPrefix": {
+      "type": "string",
+      "metadata": {
+        "description": "prefix of the VM like vm-data"
+      }
+    }    
   },
   "variables": {
     "vmStorageAccountContainerName": "vhd",
@@ -141,7 +147,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('namespace'), copyIndex())]",
+          "computerName": "[concat(parameters('vmPrefix'), copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('authSet').password]",
           "linuxConfiguration": "[parameters('osSettings').linuxConfiguration]"
