@@ -2,6 +2,12 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
+    "availabilitySetName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the availability set"
+      }
+    },
     "adminUsername": {
       "type": "string",
       "metadata": {
@@ -83,7 +89,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "es-data-set",
+      "name": "[parameters('availabilitySetName')]",
       "location": "[parameters('location')]",
       "properties": {
         "platformUpdateDomainCount": 20,
@@ -135,7 +141,7 @@
           "vmSize": "[parameters('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat('data-vm', copyIndex())]",
+          "computerName": "[concat(parameters('namespace'), copyIndex())]",
           "adminUsername": "[parameters('adminUsername')]",
           "adminPassword": "[parameters('authSet').password]",
           "linuxConfiguration": "[parameters('osSettings').linuxConfiguration]"
