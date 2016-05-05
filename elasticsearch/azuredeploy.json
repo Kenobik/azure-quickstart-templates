@@ -853,7 +853,10 @@
           },
           "lbBackendPools": {
             "value": "[variables('dataLBSettings')]"
-          }
+          },
+          "vmPrefix": {
+            "value": "vm-data"
+          }     
         }
       }
     },
@@ -903,7 +906,10 @@
           },
           "lbBackendPools": {
             "value": "[variables('dataLBSettings')]"
-          }
+          },
+          "vmPrefix": {
+            "value": "vm-event"
+          }          
         }
       }
     },
