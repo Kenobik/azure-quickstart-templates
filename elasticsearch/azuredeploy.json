@@ -138,6 +138,13 @@
         "description": "Number of Elasticsearch data nodes"
       }
     },
+    "vmEventsDataNodeCount": {
+      "type": "int",
+      "defaultValue": 3,
+      "metadata": {
+        "description": "Number of Elasticsearch events data nodes"
+      }
+    },    
     "esClusterName": {
       "type": "string",
       "defaultValue": "elasticsearch",
@@ -814,6 +821,9 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters": {
+          "availabilitySetName": {
+            "value": "es-data-set"
+          },                
           "adminUsername": {
             "value": "[parameters('adminUsername')]"
           },
@@ -837,6 +847,56 @@
           },
           "namespace": {
             "value": "[concat(parameters('esClusterName'), '-data')]"
+          },
+          "osSettings": {
+            "value": "[variables('osSettings')]"
+          },
+          "lbBackendPools": {
+            "value": "[variables('dataLBSettings')]"
+          }
+        }
+      }
+    },
+    {
+      "name": "event-nodes",
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2015-01-01",
+      "dependsOn": [
+        "[concat('Microsoft.Resources/deployments/', 'shared')]"
+      ],
+      "properties": {
+        "mode": "Incremental",
+        "templateLink": {
+          "uri": "[variables('dataTemplateUrl')[concat('afs-', parameters('afs'))]]",
+          "contentVersion": "1.0.0.0"
+        },
+        "parameters": {
+          "availabilitySetName": {
+            "value": "es-event-set"
+          },          
+          "adminUsername": {
+            "value": "[parameters('adminUsername')]"
+          },
+          "authSet": {
+            "value": "[variables('authSet')]"
+          },
+          "location": {
+            "value": "[variables('location')]"
+          },
+          "storageSettings": {
+            "value": "[variables('dataNodeStorageSettings')]"
+          },
+          "subnet": {
+            "value": "[variables('networkSettings').subnet.data]"
+          },
+          "vmSize": {
+            "value": "[parameters('vmSizeDataNodes')]"
+          },
+          "vmCount": {
+            "value": "[parameters('vmEventsDataNodeCount')]"
+          },
+          "namespace": {
+            "value": "[concat(parameters('esClusterName'), '-events')]"
           },
           "osSettings": {
             "value": "[variables('osSettings')]"
