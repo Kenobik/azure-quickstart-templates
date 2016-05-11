@@ -855,7 +855,7 @@
             "value": "[variables('dataLBSettings')]"
           },
           "vmPrefix": {
-            "value": "vm-data"
+            "value": "data-vm"
           }     
         }
       }
@@ -908,7 +908,7 @@
             "value": "[variables('dataLBSettings')]"
           },
           "vmPrefix": {
-            "value": "vm-event"
+            "value": "event-vm"
           }          
         }
       }
