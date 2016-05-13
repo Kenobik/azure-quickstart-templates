@@ -64,7 +64,17 @@
         }
       }
     ],
-    "feLoadBalancerConfig": "[variables(concat(parameters('loadBalancerType'), 'FELBConfig'))]"
+    "feLoadBalancerConfig": "[variables(concat(parameters('loadBalancerType'), 'FELBConfig'))]",
+    "marvelFELBConfig": [
+      {
+        "name": "marvelLBFE",
+        "properties": {
+          "publicIPAddress": {
+            "id": "[resourceId('Microsoft.Network/publicIPAddresses','public-marvel-ip')]"
+          }
+        }
+      }
+    ]    
   },
   "resources": [
     {
@@ -107,6 +117,15 @@
         "publicIPAllocationMethod": "Static"
       }
     },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "public-marvel-ip",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },    
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Network/virtualNetworks",
@@ -166,7 +185,7 @@
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers','es-load-balancer'),'/backendAddressPools/LBBE')]"
               },
               "protocol": "Tcp",
-              "frontendPort": 9200,
+              "frontendPort": 4949,
               "backendPort": 9200,
               "enableFloatingIP": false,
               "idleTimeoutInMinutes": 5,
@@ -185,7 +204,7 @@
                 "id": "[concat(resourceId('Microsoft.Network/loadBalancers','es-load-balancer'),'/backendAddressPools/LBBE')]"
               },
               "protocol": "Tcp",
-              "frontendPort": 9300,
+              "frontendPort": 4948,
               "backendPort": 9300,
               "enableFloatingIP": false,
               "idleTimeoutInMinutes": 5
@@ -204,6 +223,71 @@
           }
         ]
       }
-    }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "name": "marvel-load-balancer",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', 'public-marvel-ip')]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": "[variables('marvelFELBConfig')]",
+        "backendAddressPools": [
+          {
+            "name": "marvelPool"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "es-http-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 4949,
+              "backendPort": 9200,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5,
+              "probe": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/probes/es-tcp-probe')]"
+              }
+            }
+          },
+          {
+            "name": "es-tcp-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/frontendIPConfigurations/LBFE')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/backendAddressPools/LBBE')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": 4948,
+              "backendPort": 9300,
+              "enableFloatingIP": false,
+              "idleTimeoutInMinutes": 5
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "es-tcp-probe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": 9200,
+              "intervalInSeconds": 30,
+              "numberOfProbes": 3
+            }
+          }
+        ]
+      }
+    }    
   ]
 }
