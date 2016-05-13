@@ -263,10 +263,10 @@
             "name": "es-tcp-rule",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/frontendIPConfigurations/marvelLBFE')]"
               },
               "backendAddressPool": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/backendAddressPools/LBBE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','marvel-load-balancer'),'/backendAddressPools/marvelPool')]"
               },
               "protocol": "Tcp",
               "frontendPort": 4948,
