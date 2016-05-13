@@ -52,6 +52,12 @@
                 "description": "Elasticsearch deployment platform settings"
             }
         },
+        "lbBackendPools": {
+            "type": "object",
+            "metadata": {
+                "description": "loadBalancerBackendAddressPools config object"
+            }
+        },
         "namespace": {
             "type": "string",
             "metadata": {
@@ -95,7 +101,8 @@
                             "privateIPAddress": "[concat(parameters('marvelNodesIpPrefix'),copyindex())]",
                             "subnet": {
                                 "id": "[variables('subnetRef')]"
-                            }
+                            },
+                            "loadBalancerBackendAddressPools": "[parameters('lbBackendPools').backendPools]"
                         }
                     }
                 ]
