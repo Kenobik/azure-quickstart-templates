@@ -918,7 +918,7 @@
             "value": "[variables('dataLBSettings')]"
           },
           "vmPrefix": {
-            "value": "event-vm"
+            "value": "events-vm"
           }          
         }
       }
