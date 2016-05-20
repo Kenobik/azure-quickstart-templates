@@ -635,7 +635,12 @@ function Install-WorkFlow
     }
 
     Add-Content $elasticSearchConfFile $textToAppend
-		
+
+    #disable automatic updates
+    New-Item HKLM:\SOFTWARE\Policies\Microsoft\Windows -Name WindowsUpdate
+    New-Item HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate -Name AU
+    New-ItemProperty HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU -Name NoAutoUpdate -Value 1
+
     # Add firewall exceptions
     Elasticsearch-OpenPorts
 
