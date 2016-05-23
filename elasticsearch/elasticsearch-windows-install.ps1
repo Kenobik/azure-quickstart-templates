@@ -582,8 +582,12 @@ function Install-WorkFlow
         $textToAppend = $textToAppend + "`nnode.master: true`nnode.data: true"
     }
 
-	$textToAppend = $textToAppend + "`ndiscovery.zen.minimum_master_nodes: 2"
+    $textToAppend = $textToAppend + "`ndiscovery.zen.minimum_master_nodes: 2"
     $textToAppend = $textToAppend + "`ndiscovery.zen.ping.multicast.enabled: false"
+
+    $textToAppend = $textToAppend + "`nindex.unassigned.node_left.delayed_timeout: 5m"
+    $textToAppend = $textToAppend + "`ndiscovery.zen.fd.connect_on_network_disconnect: true"
+    $textToAppend = $textToAppend + "`ndiscovery.zen.fd.ping_retries: 6"
 
     if($ipAddresses -ne $null)
     {
