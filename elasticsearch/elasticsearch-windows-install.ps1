@@ -554,7 +554,13 @@ function Install-WorkFlow
     # Use hostname for node name
     $hostname = (Get-WmiObject -Class Win32_ComputerSystem -Property Name).Name
     $textToAppend = $textToAppend + "`nnode.name: $hostname"
-
+    
+    #set avaialability set for event nodes
+    if($hostname.Contains("events-vm"))
+    {
+	$textToAppend = $textToAppend + "`nnode.AvailabilitySet: ""data-events"""    	
+    }
+    
     # Set data paths
     if($folderPathSetting -ne $null)
     {
